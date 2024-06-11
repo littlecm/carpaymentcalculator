@@ -1,4 +1,8 @@
 {
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" },
+    { "src": "webpack.config.js", "use": "@vercel/node" }
+  ],
   "routes": [
     { "src": "/(.*)", "dest": "/$1" }
   ]
