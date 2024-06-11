@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 const aprRates = {
@@ -23,14 +23,23 @@ export default function Home() {
   const [apr, setApr] = useState(aprRates[creditScore]);
 
   useEffect(() => {
-    setApr(aprRates[creditScore]);
+    const newApr = aprRates[creditScore];
+    console.log(`Updated APR: ${newApr}`);
+    setApr(newApr);
+  }, [creditScore]);
+
+  useEffect(() => {
     calculatePayment();
-  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
+  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
   function calculatePayment() {
     const principal = vehiclePrice - downPayment - tradeInValue;
     const monthlyRate = apr / 100 / 12;
     const numberOfPayments = financeTerm;
+
+    console.log(`Principal: ${principal}`);
+    console.log(`Monthly Rate: ${monthlyRate}`);
+    console.log(`Number of Payments: ${numberOfPayments}`);
 
     const newMonthlyPayment =
       monthlyRate > 0
@@ -38,6 +47,7 @@ export default function Home() {
           (1 - Math.pow(1 + monthlyRate, -numberOfPayments))
         : principal / numberOfPayments;
 
+    console.log(`New Monthly Payment: ${newMonthlyPayment}`);
     setMonthlyPayment(Math.round(newMonthlyPayment));
   }
 
