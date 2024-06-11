@@ -15,7 +15,9 @@
     "next": "14.2.3",
     "assert": "^2.0.0",
     "util": "^0.12.4",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "stream-browserify": "^3.0.0",
+    "browserify-zlib": "^0.2.0"
   },
   "devDependencies": {
     "postcss": "^8",
@@ -27,7 +29,6 @@
     "babel-loader": "^8",
     "@babel/core": "^7",
     "@babel/preset-env": "^7",
-    "@babel/preset-react": "^7",
-    "browserify-zlib": "^0.2.0"
+    "@babel/preset-react": "^7"
   }
 }
