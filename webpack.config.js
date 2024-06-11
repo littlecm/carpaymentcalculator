@@ -13,6 +13,9 @@ module.exports = {
       assert: require.resolve("assert/"),
       util: require.resolve("util/"),
       buffer: require.resolve("buffer/"),
+      fs: false, // fs is not needed in browser environment
+      stream: require.resolve("stream-browserify"),
+      zlib: require.resolve("browserify-zlib"),
     },
   },
   module: {
