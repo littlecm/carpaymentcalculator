@@ -1,22 +1,10 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  entry: "./paymentCalculatorEntry.js",
+  entry: './paymentCalculatorEntry.js',
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "paymentCalculatorBundle.js",
-    library: "PaymentCalculator",
-    libraryTarget: "umd",
-  },
-  resolve: {
-    fallback: {
-      assert: require.resolve("assert/"),
-      util: require.resolve("util/"),
-      buffer: require.resolve("buffer/"),
-      fs: false, // fs is not needed in browser environment
-      stream: require.resolve("stream-browserify"),
-      zlib: require.resolve("browserify-zlib"),
-    },
+    filename: 'paymentCalculatorBundle.js',
+    path: path.resolve(__dirname, 'public'),
   },
   module: {
     rules: [
@@ -24,9 +12,21 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
         },
       },
     ],
+  },
+  resolve: {
+    fallback: {
+      fs: false,
+      stream: require.resolve('stream-browserify'),
+      zlib: require.resolve('browserify-zlib'),
+      assert: require.resolve('assert/'),
+      util: require.resolve('util/'),
+    },
   },
 };
