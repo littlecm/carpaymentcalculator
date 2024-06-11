@@ -27,7 +27,13 @@ module.exports = {
     fallback: {
       "zlib": require.resolve("browserify-zlib"),
       "stream": require.resolve("stream-browserify"),
-      "crypto": require.resolve("crypto-browserify")
+      "crypto": require.resolve("crypto-browserify"),
+      "buffer": require.resolve("buffer"),
     }
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
+  ],
 };
