@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 const aprRates = {
@@ -95,7 +95,7 @@ export default function Home() {
               type="range"
               id="downPaymentRange"
               min="0"
-              max="80000"
+              max="20000"
               step="100"
               value={downPayment}
               onChange={(e) => setDownPayment(parseFloat(e.target.value))}
@@ -140,30 +140,15 @@ export default function Home() {
               Finance Term (months)
             </label>
             <div className="flex space-x-2 mb-2">
-              <button
-                onClick={() => setFinanceTerm(36)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                36 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(48)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                48 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(60)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                60 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(72)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                72 mo
-              </button>
+              {[36, 48, 60, 72].map(term => (
+                <button
+                  key={term}
+                  onClick={() => setFinanceTerm(term)}
+                  className={`w-1/4 py-2 border ${financeTerm === term ? 'bg-blue-500 text-white' : 'border-gray-300'} rounded`}
+                >
+                  {term} mo
+                </button>
+              ))}
             </div>
             <input
               type="number"
@@ -180,53 +165,53 @@ export default function Home() {
             >
               Credit Score
             </label>
-            <select
-              id="creditScore"
-              value={creditScore}
-              onChange={(e) => setCreditScore(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="excellent">Excellent (720-850)</option>
-              <option value="good">Good (690-719)</option>
-              <option value="fair">Fair (630-689)</option>
-              <option value="poor">Poor (300-629)</option>
-            </select>
+            <div className="flex space-x-2 mb-2">
+              {['excellent', 'good', 'fair', 'poor'].map(score => (
+                <button
+                  key={score}
+                  onClick={() => setCreditScore(score)}
+                  className={`w-1/4 py-2 border ${creditScore === score ? 'bg-blue-500 text-white' : 'border-gray-300'} rounded`}
+                >
+                  {score.charAt(0).toUpperCase() + score.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         <div className="payment-display w-full md:w-1/2 p-6 bg-gray-50 rounded-lg shadow-inner">
           <h3 className="text-xl font-bold mb-4">Finance Summary Estimate</h3>
           <div className="text-left">
-            <div className="breakdown-item">
+            <div className="mb-2 flex justify-between">
               <span className="text-gray-700">Vehicle Budget</span>
               <span className="text-gray-700">{formatCurrency(vehiclePrice)}</span>
             </div>
-            <div className="breakdown-item">
+            <div className="mb-2 flex justify-between">
               <span className="text-gray-700">Down Payment</span>
               <span className="text-gray-700">- {formatCurrency(downPayment)}</span>
             </div>
-            <div className="breakdown-item">
+            <div className="mb-2 flex justify-between">
               <span className="text-gray-700">Trade-In Value</span>
               <span className="text-gray-700">{formatCurrency(tradeInValue)}</span>
             </div>
-            <div className="breakdown-item total border-t pt-2">
+            <div className="mb-2 flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">Total Amount</span>
               <span className="text-gray-700 font-bold">
                 {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
               </span>
             </div>
-            <div className="breakdown-item total border-t pt-2">
+            <div className="mb-2 flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">Monthly Payment</span>
               <span className="text-4xl font-bold text-blue-600">
                 {formatCurrency(monthlyPayment)}/mo
               </span>
             </div>
-            <div className="breakdown-item total border-t pt-2">
+            <div className="mb-2 flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">APR</span>
               <span className="text-gray-700 font-bold">{apr}%</span>
             </div>
           </div>
-          <p className="disclaimer text-xs text-gray-400 mt-4" style={{ fontSize: "10px" }}>
-            *Title and other fees and incentives are not included in this calculation, which is an estimate only. Monthly payment estimates are for informational purposes and do not represent a financing offer from the seller of this vehicle. Other taxes may apply.
+          <p className="text-xs text-gray-400 mt-4" style={{ fontSize: "10px" }}>
+            *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase. All financing on approved credit. The Estimated Monthly Payment is only an estimate and should not be relied upon; this estimated amount may be different than other estimates or terms found throughout the site.
           </p>
         </div>
       </div>
