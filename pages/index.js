@@ -8,6 +8,9 @@ const aprRates = {
   poor: 16.0,
 };
 
+const downPayments = [0, 1000, 2000, 3000, 5000];
+const financeTerms = [36, 48, 60, 72];
+
 export default function Home() {
   const router = useRouter();
   const { query } = router;
@@ -24,7 +27,6 @@ export default function Home() {
 
   useEffect(() => {
     const newApr = aprRates[creditScore];
-    console.log(`Updated APR: ${newApr}`);
     setApr(newApr);
   }, [creditScore]);
 
@@ -32,24 +34,51 @@ export default function Home() {
     calculatePayment();
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
-  function calculatePayment() {
+  function calculatePayment(principal, monthlyRate, numberOfPayments) {
+    return monthlyRate > 0
+      ? (principal * monthlyRate) /
+          (1 - Math.pow(1 + monthlyRate, -numberOfPayments))
+      : principal / numberOfPayments;
+  }
+
+  function calculateCurrentPayment() {
     const principal = vehiclePrice - downPayment - tradeInValue;
     const monthlyRate = apr / 100 / 12;
     const numberOfPayments = financeTerm;
 
-    console.log(`Principal: ${principal}`);
-    console.log(`Monthly Rate: ${monthlyRate}`);
-    console.log(`Number of Payments: ${numberOfPayments}`);
-
-    const newMonthlyPayment =
-      monthlyRate > 0
-        ? (principal * monthlyRate) /
-          (1 - Math.pow(1 + monthlyRate, -numberOfPayments))
-        : principal / numberOfPayments;
-
-    console.log(`New Monthly Payment: ${newMonthlyPayment}`);
+    const newMonthlyPayment = calculatePayment(
+      principal,
+      monthlyRate,
+      numberOfPayments
+    );
     setMonthlyPayment(Math.round(newMonthlyPayment));
   }
+
+  function getPotentialPayments() {
+    const principal = vehiclePrice - tradeInValue;
+    const monthlyRate = apr / 100 / 12;
+    return downPayments.map((dp) => {
+      const newPayment = calculatePayment(
+        principal - dp,
+        monthlyRate,
+        financeTerm
+      );
+      return { downPayment: dp, monthlyPayment: Math.round(newPayment) };
+    });
+  }
+
+  function getPotentialTermPayments() {
+    const principal = vehiclePrice - downPayment - tradeInValue;
+    const monthlyRate = apr / 100 / 12;
+    return financeTerms.map((term) => {
+      const newPayment = calculatePayment(principal, monthlyRate, term);
+      return { term, monthlyPayment: Math.round(newPayment) };
+    });
+  }
+
+  useEffect(() => {
+    calculateCurrentPayment();
+  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
   function formatCurrency(value) {
     return new Intl.NumberFormat("en-US", {
@@ -59,6 +88,9 @@ export default function Home() {
       maximumFractionDigits: 0,
     }).format(value);
   }
+
+  const potentialPayments = getPotentialPayments();
+  const potentialTermPayments = getPotentialTermPayments();
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -101,26 +133,27 @@ export default function Home() {
             >
               Down Payment
             </label>
+            <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
+              {potentialPayments.map(({ downPayment: dp, monthlyPayment: mp }) => (
+                <button
+                  key={dp}
+                  onClick={() => setDownPayment(dp)}
+                  className={`w-full md:w-1/4 py-2 border ${
+                    downPayment === dp ? "bg-blue-500 text-white" : "border-gray-300"
+                  } rounded text-center mb-2 md:mb-0`}
+                >
+                  {formatCurrency(dp)}
+                  <br />
+                  {formatCurrency(mp)}
+                </button>
+              ))}
+            </div>
             <input
-              type="range"
-              id="downPaymentRange"
-              min="0"
-              max="20000"
-              step="100"
+              type="number"
+              id="downPayment"
               value={downPayment}
               onChange={(e) => setDownPayment(parseFloat(e.target.value))}
-              className="w-full"
-            />
-            <input
-              type="text"
-              id="downPayment"
-              value={formatCurrency(downPayment)}
-              onChange={(e) =>
-                setDownPayment(
-                  parseFloat(e.target.value.replace(/[$,]/g, ""))
-                )
-              }
-              className="w-full p-2 border border-gray-300 rounded mt-2"
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
           <div className="form-group mb-4">
@@ -150,17 +183,17 @@ export default function Home() {
               Finance Term (months)
             </label>
             <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
-              {[36, 48, 60, 72].map((term) => (
+              {potentialTermPayments.map(({ term, monthlyPayment: mp }) => (
                 <button
                   key={term}
                   onClick={() => setFinanceTerm(term)}
                   className={`w-full md:w-1/4 py-2 border ${
-                    financeTerm === term
-                      ? "bg-blue-500 text-white"
-                      : "border-gray-300"
+                    financeTerm === term ? "bg-blue-500 text-white" : "border-gray-300"
                   } rounded text-center mb-2 md:mb-0`}
                 >
                   {term} mo
+                  <br />
+                  {formatCurrency(mp)}
                 </button>
               ))}
             </div>
@@ -185,9 +218,7 @@ export default function Home() {
                   key={score}
                   onClick={() => setCreditScore(score)}
                   className={`w-full md:w-1/4 py-2 border ${
-                    creditScore === score
-                      ? "bg-blue-500 text-white"
-                      : "border-gray-300"
+                    creditScore === score ? "bg-blue-500 text-white" : "border-gray-300"
                   } rounded text-center mb-2 md:mb-0`}
                 >
                   {score.charAt(0).toUpperCase() + score.slice(1)}
