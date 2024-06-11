@@ -24,5 +24,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    fallback: {
+      "zlib": require.resolve("browserify-zlib"),
+      "stream": require.resolve("stream-browserify"),
+      "crypto": require.resolve("crypto-browserify")
+    }
   },
 };
