@@ -149,12 +149,16 @@ export default function Home() {
             >
               Finance Term (months)
             </label>
-            <div className="flex space-x-2 mb-2">
-              {[36, 48, 60, 72].map(term => (
+            <div className="flex space-x-2 mb-2 flex-wrap">
+              {[36, 48, 60, 72].map((term) => (
                 <button
                   key={term}
                   onClick={() => setFinanceTerm(term)}
-                  className={`w-1/4 py-2 border ${financeTerm === term ? 'bg-blue-500 text-white' : 'border-gray-300'} rounded`}
+                  className={`w-1/4 py-2 border ${
+                    financeTerm === term
+                      ? "bg-blue-500 text-white"
+                      : "border-gray-300"
+                  } rounded text-center mb-2`}
                 >
                   {term} mo
                 </button>
@@ -175,12 +179,16 @@ export default function Home() {
             >
               Credit Score
             </label>
-            <div className="flex space-x-2 mb-2">
-              {['excellent', 'good', 'fair', 'poor'].map(score => (
+            <div className="flex space-x-2 mb-2 flex-wrap">
+              {["excellent", "good", "fair", "poor"].map((score) => (
                 <button
                   key={score}
                   onClick={() => setCreditScore(score)}
-                  className={`w-1/4 py-2 border ${creditScore === score ? 'bg-blue-500 text-white' : 'border-gray-300'} rounded`}
+                  className={`w-1/4 py-2 border ${
+                    creditScore === score
+                      ? "bg-blue-500 text-white"
+                      : "border-gray-300"
+                  } rounded text-center mb-2`}
                 >
                   {score.charAt(0).toUpperCase() + score.slice(1)}
                 </button>
