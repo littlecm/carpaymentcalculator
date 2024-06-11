@@ -4,7 +4,7 @@ module.exports = {
   entry: './paymentCalculatorEntry.js',
   output: {
     filename: 'paymentCalculatorBundle.js',
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'public'), // Ensure this points to the 'public' directory
   },
   module: {
     rules: [
