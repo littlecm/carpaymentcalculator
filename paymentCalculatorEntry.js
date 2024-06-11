@@ -1,4 +1,4 @@
-// src/paymentCalculatorEntry.js
+// paymentCalculatorEntry.js
 
 import React from 'react';
 import ReactDOM from 'react-dom';
