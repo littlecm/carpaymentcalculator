@@ -8,6 +8,9 @@ const aprRates = {
   poor: 16.0,
 };
 
+const financeTerms = [36, 48, 60, 72, 84];
+const downPayments = [0, 1000, 2000, 3000, 5000];
+
 export default function Home() {
   const router = useRouter();
   const { query } = router;
@@ -23,11 +26,11 @@ export default function Home() {
   const [apr, setApr] = useState(aprRates[creditScore]);
 
   useEffect(() => {
+    setApr(aprRates[creditScore]);
     calculatePayment();
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
 
   function calculatePayment() {
-    setApr(aprRates[creditScore]);
     const principal = vehiclePrice - downPayment - tradeInValue;
     const monthlyRate = apr / 100 / 12;
     const numberOfPayments = financeTerm;
@@ -91,16 +94,17 @@ export default function Home() {
             >
               Down Payment
             </label>
-            <input
-              type="range"
-              id="downPaymentRange"
-              min="0"
-              max="80000"
-              step="100"
-              value={downPayment}
-              onChange={(e) => setDownPayment(parseFloat(e.target.value))}
-              className="w-full"
-            />
+            <div className="flex space-x-2 mb-2">
+              {downPayments.map((amount) => (
+                <button
+                  key={amount}
+                  onClick={() => setDownPayment(amount)}
+                  className={`w-1/5 py-2 border border-gray-300 rounded ${downPayment === amount ? 'bg-blue-500 text-white' : ''}`}
+                >
+                  {formatCurrency(amount)}
+                </button>
+              ))}
+            </div>
             <input
               type="text"
               id="downPayment"
@@ -140,30 +144,15 @@ export default function Home() {
               Finance Term (months)
             </label>
             <div className="flex space-x-2 mb-2">
-              <button
-                onClick={() => setFinanceTerm(36)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                36 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(48)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                48 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(60)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                60 mo
-              </button>
-              <button
-                onClick={() => setFinanceTerm(72)}
-                className="w-1/4 py-2 border border-gray-300 rounded"
-              >
-                72 mo
-              </button>
+              {financeTerms.map((term) => (
+                <button
+                  key={term}
+                  onClick={() => setFinanceTerm(term)}
+                  className={`w-1/5 py-2 border border-gray-300 rounded ${financeTerm === term ? 'bg-blue-500 text-white' : ''}`}
+                >
+                  {term} mo
+                </button>
+              ))}
             </div>
             <input
               type="number"
@@ -180,47 +169,47 @@ export default function Home() {
             >
               Credit Score
             </label>
-            <select
-              id="creditScore"
-              value={creditScore}
-              onChange={(e) => setCreditScore(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="excellent">Excellent (720-850)</option>
-              <option value="good">Good (690-719)</option>
-              <option value="fair">Fair (630-689)</option>
-              <option value="poor">Poor (300-629)</option>
-            </select>
+            <div className="flex space-x-2 mb-2">
+              {Object.keys(aprRates).map((score) => (
+                <button
+                  key={score}
+                  onClick={() => setCreditScore(score)}
+                  className={`w-1/4 py-2 border border-gray-300 rounded ${creditScore === score ? 'bg-blue-500 text-white' : ''}`}
+                >
+                  {score.charAt(0).toUpperCase() + score.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         <div className="payment-display w-full md:w-1/2 p-6 bg-gray-50 rounded-lg shadow-inner">
           <h3 className="text-xl font-bold mb-4">Finance Summary Estimate</h3>
           <div className="text-left">
-            <div className="mb-2 flex justify-between">
+            <div className="breakdown-item mb-2">
               <span className="text-gray-700">Vehicle Budget</span>
               <span className="text-gray-700">{formatCurrency(vehiclePrice)}</span>
             </div>
-            <div className="mb-2 flex justify-between">
+            <div className="breakdown-item mb-2">
               <span className="text-gray-700">Down Payment</span>
               <span className="text-gray-700">- {formatCurrency(downPayment)}</span>
             </div>
-            <div className="mb-2 flex justify-between">
+            <div className="breakdown-item mb-2">
               <span className="text-gray-700">Trade-In Value</span>
               <span className="text-gray-700">{formatCurrency(tradeInValue)}</span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="breakdown-item mb-2 border-t pt-2 total">
               <span className="text-gray-700 font-bold">Total Amount</span>
               <span className="text-gray-700 font-bold">
                 {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
               </span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="breakdown-item mb-2 border-t pt-2">
               <span className="text-gray-700 font-bold">Monthly Payment</span>
               <span className="text-4xl font-bold text-blue-600">
                 {formatCurrency(monthlyPayment)}/mo
               </span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="breakdown-item mb-2 border-t pt-2">
               <span className="text-gray-700 font-bold">APR</span>
               <span className="text-gray-700 font-bold">{apr}%</span>
             </div>
