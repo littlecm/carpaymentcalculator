@@ -1,10 +1,13 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './paymentCalculatorEntry.js',
   output: {
-    filename: 'paymentCalculatorBundle.js',
-    path: path.resolve(__dirname, 'public'), // Ensure this points to the 'public' directory
+    filename: 'paymentCalculator.js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'PaymentCalculator',
+    libraryTarget: 'umd',
   },
   module: {
     rules: [
@@ -21,12 +24,21 @@ module.exports = {
     ],
   },
   resolve: {
+    extensions: ['.js', '.jsx'],
     fallback: {
-      fs: false,
-      stream: require.resolve('stream-browserify'),
-      zlib: require.resolve('browserify-zlib'),
-      assert: require.resolve('assert/'),
-      util: require.resolve('util/'),
-    },
+      "zlib": require.resolve("browserify-zlib"),
+      "stream": require.resolve("stream-browserify"),
+      "crypto": require.resolve("crypto-browserify"),
+      "buffer": require.resolve("buffer"),
+      "assert": require.resolve("assert/"),
+      "util": require.resolve("util/"),
+      "fs": false // fs module is not meant for browser environment, so we can safely set it to false
+    }
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser'
+    }),
+  ],
 };
