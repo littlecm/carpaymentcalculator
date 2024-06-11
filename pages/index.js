@@ -26,13 +26,14 @@ export default function Home() {
   const [apr, setApr] = useState(aprRates[creditScore]);
 
   useEffect(() => {
+    console.log("Credit Score changed:", creditScore);
     setApr(aprRates[creditScore]);
-    calculatePayment();
-  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
+  }, [creditScore]);
 
   useEffect(() => {
-    console.log("Updated APR:", apr);
-  }, [apr]);
+    console.log("APR or other parameters changed:", apr);
+    calculatePayment();
+  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
   function calculatePayment() {
     const principal = vehiclePrice - downPayment - tradeInValue;
