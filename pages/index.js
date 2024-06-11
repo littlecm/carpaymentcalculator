@@ -30,10 +30,18 @@ export default function Home() {
     calculatePayment();
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
 
+  useEffect(() => {
+    console.log("Updated APR:", apr);
+  }, [apr]);
+
   function calculatePayment() {
     const principal = vehiclePrice - downPayment - tradeInValue;
     const monthlyRate = apr / 100 / 12;
     const numberOfPayments = financeTerm;
+
+    console.log("Principal:", principal);
+    console.log("Monthly Rate:", monthlyRate);
+    console.log("Number of Payments:", numberOfPayments);
 
     const newMonthlyPayment =
       monthlyRate > 0
@@ -42,6 +50,7 @@ export default function Home() {
         : principal / numberOfPayments;
 
     setMonthlyPayment(Math.round(newMonthlyPayment));
+    console.log("New Monthly Payment:", newMonthlyPayment);
   }
 
   function formatCurrency(value) {
