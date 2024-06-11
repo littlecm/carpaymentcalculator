@@ -1,8 +1,12 @@
 {
-  "builds": [
-    { "src": "next.config.js", "use": "@vercel/next" },
-    { "src": "webpack.config.js", "use": "@vercel/webpack" }
-  ],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "commands": {
+      "build": "next build && npm run build:widget"
+    }
+  },
   "routes": [
     { "src": "/(.*)", "dest": "/$1" }
   ]
