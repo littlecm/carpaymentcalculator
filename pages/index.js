@@ -72,7 +72,8 @@ export default function Home() {
     const monthlyRate = apr / 100 / 12;
     return financeTerms.map((term) => {
       const newPayment = calculatePayment(principal, monthlyRate, term);
-      return { term, monthlyPayment: Math.round(newPayment) };
+      const paymentDifference = Math.round(newPayment) - monthlyPayment;
+      return { term, paymentDifference };
     });
   }
 
@@ -143,8 +144,12 @@ export default function Home() {
                   } rounded text-center mb-2 md:mb-0`}
                 >
                   {formatCurrency(dp)}
-                  <br />
-                  {formatCurrency(mp)}
+                  {downPayment !== dp && (
+                    <span>
+                      <br />
+                      {dp < downPayment ? "↓" : "↑"} {formatCurrency(mp - monthlyPayment)}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -183,7 +188,7 @@ export default function Home() {
               Finance Term (months)
             </label>
             <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
-              {potentialTermPayments.map(({ term, monthlyPayment: mp }) => (
+              {potentialTermPayments.map(({ term, paymentDifference }) => (
                 <button
                   key={term}
                   onClick={() => setFinanceTerm(term)}
@@ -192,8 +197,12 @@ export default function Home() {
                   } rounded text-center mb-2 md:mb-0`}
                 >
                   {term} mo
-                  <br />
-                  {formatCurrency(mp)}
+                  {financeTerm !== term && (
+                    <span>
+                      <br />
+                      {paymentDifference < 0 ? "↓" : "↑"} {formatCurrency(Math.abs(paymentDifference))}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
