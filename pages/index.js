@@ -13,7 +13,7 @@ export default function Home() {
   const { query } = router;
 
   const [vehiclePrice, setVehiclePrice] = useState(
-    query.price ? parseFloat(query.price) : 20000,
+    query.price ? parseFloat(query.price) : 20000
   );
   const [downPayment, setDownPayment] = useState(1000);
   const [tradeInValue, setTradeInValue] = useState(0);
@@ -21,12 +21,14 @@ export default function Home() {
   const [creditScore, setCreditScore] = useState("excellent");
   const [monthlyPayment, setMonthlyPayment] = useState(0);
   const [apr, setApr] = useState(aprRates[creditScore]);
-  const [previousMonthlyPayment, setPreviousMonthlyPayment] = useState(0);
-  const [paymentChange, setPaymentChange] = useState(0);
 
   useEffect(() => {
     calculatePayment();
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
+
+  useEffect(() => {
+    setApr(aprRates[creditScore]);
+  }, [creditScore]);
 
   function calculatePayment() {
     const principal = vehiclePrice - downPayment - tradeInValue;
@@ -39,12 +41,7 @@ export default function Home() {
           (1 - Math.pow(1 + monthlyRate, -numberOfPayments))
         : principal / numberOfPayments;
 
-    setPreviousMonthlyPayment(monthlyPayment);
     setMonthlyPayment(newMonthlyPayment.toFixed(2));
-    setApr(aprRates[creditScore]);
-
-    const paymentDifference = newMonthlyPayment - previousMonthlyPayment;
-    setPaymentChange(paymentDifference.toFixed(2));
   }
 
   function formatCurrency(value) {
@@ -77,10 +74,14 @@ export default function Home() {
               className="w-full"
             />
             <input
-              type="number"
+              type="text"
               id="vehiclePrice"
-              value={vehiclePrice}
-              onChange={(e) => setVehiclePrice(parseFloat(e.target.value))}
+              value={formatCurrency(vehiclePrice)}
+              onChange={(e) =>
+                setVehiclePrice(
+                  parseFloat(e.target.value.replace(/[$,]/g, ""))
+                )
+              }
               className="w-full p-2 border border-gray-300 rounded mt-2"
             />
           </div>
@@ -102,10 +103,14 @@ export default function Home() {
               className="w-full"
             />
             <input
-              type="number"
+              type="text"
               id="downPayment"
-              value={downPayment}
-              onChange={(e) => setDownPayment(parseFloat(e.target.value))}
+              value={formatCurrency(downPayment)}
+              onChange={(e) =>
+                setDownPayment(
+                  parseFloat(e.target.value.replace(/[$,]/g, ""))
+                )
+              }
               className="w-full p-2 border border-gray-300 rounded mt-2"
             />
           </div>
@@ -117,10 +122,14 @@ export default function Home() {
               Trade-In Value
             </label>
             <input
-              type="number"
+              type="text"
               id="tradeInValue"
-              value={tradeInValue}
-              onChange={(e) => setTradeInValue(parseFloat(e.target.value))}
+              value={formatCurrency(tradeInValue)}
+              onChange={(e) =>
+                setTradeInValue(
+                  parseFloat(e.target.value.replace(/[$,]/g, ""))
+                )
+              }
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -184,66 +193,42 @@ export default function Home() {
               <option value="poor">Poor (300-629)</option>
             </select>
           </div>
-          <button
-            onClick={calculatePayment}
-            className="w-full bg-blue-500 text-white py-2 rounded"
-          >
-            Calculate Payment
-          </button>
         </div>
         <div className="payment-display w-full md:w-1/2 p-6 bg-gray-50 rounded-lg shadow-inner">
-          <h3 className="text-xl font-bold mb-4">Your Monthly Payment</h3>
-          <p
-            id="monthlyPayment"
-            className="text-4xl font-bold text-blue-600 mb-2"
-          >
-            {formatCurrency(monthlyPayment)}/mo
-          </p>
-          <p id="apr" className="text-gray-700 mb-4">
-            APR: {apr}%
-          </p>
-          <div
-            id="breakdown"
-            className="text-left border-t border-gray-300 pt-4"
-          >
-            <p className="text-gray-700">
-              Vehicle Budget: {formatCurrency(vehiclePrice)}
-            </p>
-            <p className="text-gray-700">
-              Down Payment: - {formatCurrency(downPayment)}
-            </p>
-            <p className="text-gray-700">
-              Trade-In Value: {formatCurrency(tradeInValue)}
-            </p>
-            <p className="text-gray-700">
-              Total Amount:{" "}
-              {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
-            </p>
-            <p className="text-gray-700">
-              Your Monthly Payment: {formatCurrency(monthlyPayment)}/mo
-            </p>
+          <h3 className="text-xl font-bold mb-4">Finance Summary Estimate</h3>
+          <div className="text-left">
+            <div className="mb-2 flex justify-between">
+              <span className="text-gray-700">Vehicle Budget</span>
+              <span className="text-gray-700">{formatCurrency(vehiclePrice)}</span>
+            </div>
+            <div className="mb-2 flex justify-between">
+              <span className="text-gray-700">Down Payment</span>
+              <span className="text-gray-700">- {formatCurrency(downPayment)}</span>
+            </div>
+            <div className="mb-2 flex justify-between">
+              <span className="text-gray-700">Trade-In Value</span>
+              <span className="text-gray-700">{formatCurrency(tradeInValue)}</span>
+            </div>
+            <div className="mb-2 flex justify-between border-t pt-2">
+              <span className="text-gray-700 font-bold">Total Amount</span>
+              <span className="text-gray-700 font-bold">
+                {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
+              </span>
+            </div>
+            <div className="mb-2 flex justify-between border-t pt-2">
+              <span className="text-gray-700 font-bold">Monthly Payment</span>
+              <span className="text-4xl font-bold text-blue-600">
+                {formatCurrency(monthlyPayment)}/mo
+              </span>
+            </div>
+            <div className="mb-2 flex justify-between border-t pt-2">
+              <span className="text-gray-700 font-bold">APR</span>
+              <span className="text-gray-700 font-bold">{apr}%</span>
+            </div>
           </div>
-          <p id="paymentChange" className="text-sm text-gray-500 mt-4">
-            {paymentChange > 0
-              ? `Your monthly payment increased by ${formatCurrency(paymentChange)}`
-              : paymentChange < 0
-                ? `Your monthly payment decreased by ${formatCurrency(
-                    Math.abs(paymentChange),
-                  )}`
-                : ""}
-          </p>
           <p className="text-xs text-gray-400 mt-4">
-            *Title and other fees and incentives are not included in this
-            calculation, which is an estimate only. Monthly payment estimates
-            are for informational purposes and do not represent a financing
-            offer from the seller of this vehicle. Other taxes may apply.
+            *Title and other fees and incentives are not included in this calculation, which is an estimate only. Monthly payment estimates are for informational purposes and do not represent a financing offer from the seller of this vehicle. Other taxes may apply.
           </p>
-          <a
-            href="/start-financing"
-            className="mt-6 inline-block bg-green-500 text-white py-2 px-4 rounded"
-          >
-            Start Financing Application and Shop Online
-          </a>
         </div>
       </div>
     </div>
