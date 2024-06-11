@@ -8,6 +8,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --primary-color: 7, 42, 96; /* RGB values for #072a60 */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,7 +73,7 @@ body {
 }
 
 button {
-  background-color: #072a60;
+  background-color: rgb(var(--primary-color));
   color: white;
   border: none;
   padding: 10px 20px;
@@ -87,7 +88,7 @@ button:hover {
 }
 
 button.bg-blue-500.text-white {
-  background-color: #072a60;
+  background-color: rgb(var(--primary-color));
 }
 
 button.bg-blue-500.text-white:hover {
