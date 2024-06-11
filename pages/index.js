@@ -28,10 +28,11 @@ export default function Home() {
   useEffect(() => {
     const newApr = aprRates[creditScore];
     setApr(newApr);
+    calculateCurrentPayment(newApr);
   }, [creditScore]);
 
   useEffect(() => {
-    calculatePayment();
+    calculateCurrentPayment(apr);
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
   function calculatePayment(principal, monthlyRate, numberOfPayments) {
@@ -41,9 +42,9 @@ export default function Home() {
       : principal / numberOfPayments;
   }
 
-  function calculateCurrentPayment() {
+  function calculateCurrentPayment(currentApr) {
     const principal = vehiclePrice - downPayment - tradeInValue;
-    const monthlyRate = apr / 100 / 12;
+    const monthlyRate = currentApr / 100 / 12;
     const numberOfPayments = financeTerm;
 
     const newMonthlyPayment = calculatePayment(
@@ -54,32 +55,29 @@ export default function Home() {
     setMonthlyPayment(Math.round(newMonthlyPayment));
   }
 
-  function getPotentialPayments() {
+  function getPotentialPayments(currentApr) {
     const principal = vehiclePrice - tradeInValue;
-    const monthlyRate = apr / 100 / 12;
+    const monthlyRate = currentApr / 100 / 12;
     return downPayments.map((dp) => {
       const newPayment = calculatePayment(
         principal - dp,
         monthlyRate,
         financeTerm
       );
-      return { downPayment: dp, monthlyPayment: Math.round(newPayment) };
+      const paymentDifference = Math.round(newPayment) - monthlyPayment;
+      return { downPayment: dp, paymentDifference };
     });
   }
 
-  function getPotentialTermPayments() {
+  function getPotentialTermPayments(currentApr) {
     const principal = vehiclePrice - downPayment - tradeInValue;
-    const monthlyRate = apr / 100 / 12;
+    const monthlyRate = currentApr / 100 / 12;
     return financeTerms.map((term) => {
       const newPayment = calculatePayment(principal, monthlyRate, term);
       const paymentDifference = Math.round(newPayment) - monthlyPayment;
       return { term, paymentDifference };
     });
   }
-
-  useEffect(() => {
-    calculateCurrentPayment();
-  }, [vehiclePrice, downPayment, tradeInValue, financeTerm, apr]);
 
   function formatCurrency(value) {
     return new Intl.NumberFormat("en-US", {
@@ -90,8 +88,8 @@ export default function Home() {
     }).format(value);
   }
 
-  const potentialPayments = getPotentialPayments();
-  const potentialTermPayments = getPotentialTermPayments();
+  const potentialPayments = getPotentialPayments(apr);
+  const potentialTermPayments = getPotentialTermPayments(apr);
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -135,7 +133,7 @@ export default function Home() {
               Down Payment
             </label>
             <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
-              {potentialPayments.map(({ downPayment: dp, monthlyPayment: mp }) => (
+              {potentialPayments.map(({ downPayment: dp, paymentDifference }) => (
                 <button
                   key={dp}
                   onClick={() => setDownPayment(dp)}
@@ -145,9 +143,8 @@ export default function Home() {
                 >
                   {formatCurrency(dp)}
                   {downPayment !== dp && (
-                    <span>
-                      <br />
-                      {dp < downPayment ? "↓" : "↑"} {formatCurrency(mp - monthlyPayment)}
+                    <span className="block text-xs text-gray-500">
+                      {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
                 </button>
@@ -198,9 +195,8 @@ export default function Home() {
                 >
                   {term} mo
                   {financeTerm !== term && (
-                    <span>
-                      <br />
-                      {paymentDifference < 0 ? "↓" : "↑"} {formatCurrency(Math.abs(paymentDifference))}
+                    <span className="block text-xs text-gray-500">
+                      {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
                 </button>
