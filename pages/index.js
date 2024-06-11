@@ -26,11 +26,8 @@ export default function Home() {
     calculatePayment();
   }, [vehiclePrice, downPayment, tradeInValue, financeTerm, creditScore]);
 
-  useEffect(() => {
-    setApr(aprRates[creditScore]);
-  }, [creditScore]);
-
   function calculatePayment() {
+    setApr(aprRates[creditScore]);
     const principal = vehiclePrice - downPayment - tradeInValue;
     const monthlyRate = apr / 100 / 12;
     const numberOfPayments = financeTerm;
@@ -41,13 +38,15 @@ export default function Home() {
           (1 - Math.pow(1 + monthlyRate, -numberOfPayments))
         : principal / numberOfPayments;
 
-    setMonthlyPayment(newMonthlyPayment.toFixed(2));
+    setMonthlyPayment(Math.round(newMonthlyPayment));
   }
 
   function formatCurrency(value) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(value);
   }
 
@@ -226,8 +225,8 @@ export default function Home() {
               <span className="text-gray-700 font-bold">{apr}%</span>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-4">
-            *Title and other fees and incentives are not included in this calculation, which is an estimate only. Monthly payment estimates are for informational purposes and do not represent a financing offer from the seller of this vehicle. Other taxes may apply.
+          <p className="text-xs text-gray-400 mt-4 disclaimer">
+            *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase. All financing on approved credit. The Estimated Monthly Payment is only an estimate and should not be relied upon; this estimated amount may be different than other estimates or terms found throughout the site.
           </p>
         </div>
       </div>
