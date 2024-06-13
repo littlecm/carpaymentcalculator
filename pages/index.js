@@ -15,9 +15,9 @@ export default function Home() {
   const router = useRouter();
   const { query } = router;
 
-  const [vehiclePrice, setVehiclePrice] = useState(
-    query.price ? parseFloat(query.price) : 20000
-  );
+  const initialPrice = query.price ? parseFloat(query.price) : 20000;
+  
+  const [vehiclePrice, setVehiclePrice] = useState(initialPrice);
   const [downPayment, setDownPayment] = useState(1000);
   const [tradeInValue, setTradeInValue] = useState(0);
   const [financeTerm, setFinanceTerm] = useState(60);
