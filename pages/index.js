@@ -168,7 +168,7 @@ export default function Home() {
             <input
               type="text"
               id="tradeInValue"
-              value={formatCurrency(tradeInValue)}
+              value={formatCurrency(trade              InValue)}
               onChange={(e) =>
                 setTradeInValue(
                   parseFloat(e.target.value.replace(/[$,]/g, ""))
@@ -267,13 +267,14 @@ export default function Home() {
             </div>
           </div>
           <div className="text-xs text-gray-600 mt-4 text-center md:text-left">
-            <p className="text-[10px]">
+            <p className="text-[7px]">
               *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase.
             </p>
-            <p className="text-[10px]">The Estimated Monthly Payment is an estimate and is subject to change.</p>
+            <p className="text-[7px]">The Estimated Monthly Payment is an estimate and is subject to change.</p>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
