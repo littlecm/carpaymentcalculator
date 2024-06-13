@@ -188,4 +188,71 @@ button.bg-blue-500.text-white:hover {
   transition: background-color 0.3s ease, color 0.3s ease;
   margin-right: 8px;
   margin-bottom: 8px;
-  text-align: center
+  text-align: center;
+  display: inline-block;
+}
+
+.form-group button.active,
+.form-group button:hover {
+  background-color: #072a60;
+  color: white;
+}
+
+.form-group button span {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+/* Specific styles for the payment differences */
+.form-group button span.text-red-600 {
+  color: #e3342f;
+}
+
+.form-group button span.text-green-600 {
+  color: #38c172;
+}
+
+/* Additional layout adjustments */
+.payment-display .summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.payment-display .summary-item .label {
+  color: #555;
+}
+
+.payment-display .summary-item .value {
+  color: #072a60;
+}
+
+.payment-display .total-amount {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.payment-display .monthly-payment {
+  font-size: 24px;
+  font-weight: 700;
+  color: #072a60;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.payment-display .apr {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.payment-display .disclaimer {
+  font-size: 10px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 20px;
+}
