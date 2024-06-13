@@ -131,8 +131,8 @@ export default function Home() {
               className="block text-sm font-medium text-gray-700 mb-2"
             >
               Down Payment
-            </label>
-            <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
+           </label>
+          <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
               {potentialPayments.map(({ downPayment: dp, paymentDifference }) => (
                 <button
                   key={dp}
@@ -143,7 +143,7 @@ export default function Home() {
                 >
                   {formatCurrency(dp)}
                   {downPayment !== dp && (
-                    <span className="block text-xs text-gray-500">
+                    <span className="block text-xs text-red-600">
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -195,7 +195,7 @@ export default function Home() {
                 >
                   {term} mo
                   {financeTerm !== term && (
-                    <span className="block text-xs text-gray-500">
+                    <span className="block text-xs text-red-600">
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -232,9 +232,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="payment-display w-full md:w-1/2 p-6 bg-gray-50 rounded-lg shadow-inner">
+        <div className="payment-display max-w-sm mx-auto rounded-lg shadow-lg p-6 bg-white md:w-1/2 md:bg-gray-50 md:shadow-inner">
           <h3 className="text-xl font-bold mb-4 text-center md:text-left">Finance Summary Estimate</h3>
-          <div className="text-left space-y-2 md:space-y-4">
+          <div className="space-y-2 md:space-y-4">
             <div className="flex justify-between">
               <span className="text-gray-700">Vehicle Budget</span>
               <span className="text-gray-700">{formatCurrency(vehiclePrice)}</span>
@@ -247,26 +247,31 @@ export default function Home() {
               <span className="text-gray-700">Trade-In Value</span>
               <span className="text-gray-700">{formatCurrency(tradeInValue)}</span>
             </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="text-gray-700 font-bold">Total Amount</span>
-              <span className="text-gray-700 font-bold">
-                {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
-              </span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="text-gray-700 font-bold">Monthly Payment</span>
-              <span className="text-4xl font-bold text-blue-600">
-                {formatCurrency(monthlyPayment)}/mo
-              </span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="text-gray-700 font-bold">APR</span>
-              <span className="text-gray-700 font-bold">{apr}%</span>
+            <hr className="my-2" />
+            <div className="flex justify-between">
+              <span className="font-bold">Total Amount</span>
+              <span className="font-bold">{formatCurrency(vehiclePrice - downPayment - tradeInValue)}</span>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-4 text-center md:text-left">
-            *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase. All financing on approved credit. The Estimated Monthly Payment is only an estimate and should not be relied upon; this estimated amount may be different than other estimates or terms found throughout the site.
-          </p>
+          <div className="mt-4">
+            <div className="font-bold text-center md:text-left">
+              <span className="block">Monthly</span>
+              <span className="text-4xl">{formatCurrency(monthlyPayment)}</span>
+              <span className="text-sm font-medium">/mo</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="flex justify-between">
+              <span>APR</span>
+              <span>{apr}%</span>
+            </div>
+          </div>
+          <div className="text-xs text-gray-600 mt-4 text-center md:text-left">
+            <p>
+              *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase.
+            </p>
+            <p>The Estimated Monthly Payment is an estimate and is subject to change.</p>
+          </div>
         </div>
       </div>
     </div>
