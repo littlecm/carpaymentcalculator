@@ -132,14 +132,14 @@ export default function Home() {
             >
               Down Payment
             </label>
-            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
               {potentialPayments.map(({ downPayment: dp, paymentDifference }) => (
                 <button
                   key={dp}
                   onClick={() => setDownPayment(dp)}
                   className={`w-full md:w-1/4 py-2 border ${
                     downPayment === dp ? "bg-blue-500 text-white" : "border-gray-300"
-                  } rounded text-center mb-2 md:mb-0`}
+                  } rounded text-center`}
                 >
                   {formatCurrency(dp)}
                   {downPayment !== dp && (
@@ -184,14 +184,14 @@ export default function Home() {
             >
               Finance Term (months)
             </label>
-            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
               {potentialTermPayments.map(({ term, paymentDifference }) => (
                 <button
                   key={term}
                   onClick={() => setFinanceTerm(term)}
                   className={`w-full md:w-1/4 py-2 border ${
                     financeTerm === term ? "bg-blue-500 text-white" : "border-gray-300"
-                  } rounded text-center mb-2 md:mb-0`}
+                  } rounded text-center`}
                 >
                   {term} mo
                   {financeTerm !== term && (
@@ -217,14 +217,14 @@ export default function Home() {
             >
               Credit Score
             </label>
-            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
               {["excellent", "good", "fair", "poor"].map((score) => (
                 <button
                   key={score}
                   onClick={() => setCreditScore(score)}
                   className={`w-full md:w-1/4 py-2 border ${
                     creditScore === score ? "bg-blue-500 text-white" : "border-gray-300"
-                  } rounded text-center mb-2 md:mb-0`}
+                  } rounded text-center text-sm md:text-base`}
                 >
                   {score.charAt(0).toUpperCase() + score.slice(1)}
                 </button>
@@ -233,38 +233,38 @@ export default function Home() {
           </div>
         </div>
         <div className="payment-display w-full md:w-1/2 p-6 bg-gray-50 rounded-lg shadow-inner">
-          <h3 className="text-xl font-bold mb-4">Finance Summary Estimate</h3>
-          <div className="text-left">
-            <div className="mb-2 flex justify-between">
+          <h3 className="text-xl font-bold mb-4 text-center md:text-left">Finance Summary Estimate</h3>
+          <div className="text-left space-y-2 md:space-y-4">
+            <div className="flex justify-between">
               <span className="text-gray-700">Vehicle Budget</span>
               <span className="text-gray-700">{formatCurrency(vehiclePrice)}</span>
             </div>
-            <div className="mb-2 flex justify-between">
+            <div className="flex justify-between">
               <span className="text-gray-700">Down Payment</span>
               <span className="text-gray-700">- {formatCurrency(downPayment)}</span>
             </div>
-            <div className="mb-2 flex justify-between">
+            <div className="flex justify-between">
               <span className="text-gray-700">Trade-In Value</span>
               <span className="text-gray-700">{formatCurrency(tradeInValue)}</span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">Total Amount</span>
               <span className="text-gray-700 font-bold">
                 {formatCurrency(vehiclePrice - downPayment - tradeInValue)}
               </span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">Monthly Payment</span>
               <span className="text-4xl font-bold text-blue-600">
                 {formatCurrency(monthlyPayment)}/mo
               </span>
             </div>
-            <div className="mb-2 flex justify-between border-t pt-2">
+            <div className="flex justify-between border-t pt-2">
               <span className="text-gray-700 font-bold">APR</span>
               <span className="text-gray-700 font-bold">{apr}%</span>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-4" style={{ fontSize: "10px" }}>
+          <p className="text-xs text-gray-400 mt-4 text-center md:text-left">
             *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase. All financing on approved credit. The Estimated Monthly Payment is only an estimate and should not be relied upon; this estimated amount may be different than other estimates or terms found throughout the site.
           </p>
         </div>
