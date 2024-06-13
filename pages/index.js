@@ -16,7 +16,7 @@ export default function Home() {
   const { query } = router;
 
   const initialPrice = query.price ? parseFloat(query.price) : 20000;
-  
+
   const [vehiclePrice, setVehiclePrice] = useState(initialPrice);
   const [downPayment, setDownPayment] = useState(1000);
   const [tradeInValue, setTradeInValue] = useState(0);
@@ -132,7 +132,7 @@ export default function Home() {
             >
               Down Payment
             </label>
-            <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
               {potentialPayments.map(({ downPayment: dp, paymentDifference }) => (
                 <button
                   key={dp}
@@ -184,7 +184,7 @@ export default function Home() {
             >
               Finance Term (months)
             </label>
-            <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
               {potentialTermPayments.map(({ term, paymentDifference }) => (
                 <button
                   key={term}
@@ -217,7 +217,7 @@ export default function Home() {
             >
               Credit Score
             </label>
-            <div className="flex space-x-2 mb-2 flex-wrap md:flex-nowrap">
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:space-x-2 mb-2">
               {["excellent", "good", "fair", "poor"].map((score) => (
                 <button
                   key={score}
