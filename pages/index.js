@@ -9,7 +9,7 @@ const aprRates = {
 };
 
 const downPayments = [0, 1000, 2000, 3000, 5000];
-const financeTerms = [36, 48, 60, 72];
+const financeTerms = [36, 48, 60, 72, 84];
 
 export default function Home() {
   const router = useRouter();
@@ -95,7 +95,7 @@ export default function Home() {
     <div className="container mx-auto py-10 px-4">
       <div className="calculator-container bg-white p-8 rounded-lg shadow-md flex flex-col md:flex-row">
         <div className="calculator-form w-full md:w-1/2 mb-6 md:mb-0">
-          <h2 className="text-2xl font-bold mb-4">Car Payment Calculator</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">Car Payment Calculator</h2>
           <div className="form-group mb-4">
             <label
               htmlFor="vehiclePrice"
@@ -139,11 +139,11 @@ export default function Home() {
                   onClick={() => setDownPayment(dp)}
                   className={`w-full md:w-1/4 py-2 border ${
                     downPayment === dp ? "bg-blue-500 text-white" : "border-gray-300"
-                  } rounded text-center`}
+                  } rounded text-center flex flex-col items-center`}
                 >
                   {formatCurrency(dp)}
                   {downPayment !== dp && (
-                    <span className={`block text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
+                    <span className={`text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -168,7 +168,7 @@ export default function Home() {
             <input
               type="text"
               id="tradeInValue"
-              value={formatCurrency(trade              InValue)}
+              value={formatCurrency(tradeInValue)}
               onChange={(e) =>
                 setTradeInValue(
                   parseFloat(e.target.value.replace(/[$,]/g, ""))
@@ -191,11 +191,11 @@ export default function Home() {
                   onClick={() => setFinanceTerm(term)}
                   className={`w-full md:w-1/4 py-2 border ${
                     financeTerm === term ? "bg-blue-500 text-white" : "border-gray-300"
-                  } rounded text-center`}
+                  } rounded text-center flex flex-col items-center`}
                 >
                   {term} mo
                   {financeTerm !== term && (
-                    <span className={`block text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
+                    <span className={`text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -267,14 +267,13 @@ export default function Home() {
             </div>
           </div>
           <div className="text-xs text-gray-600 mt-4 text-center md:text-left">
-            <p className="text-[7px]">
+            <p className="text-[10px]">
               *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase.
             </p>
-            <p className="text-[7px]">The Estimated Monthly Payment is an estimate and is subject to change.</p>
+            <p className="text-[10px]">The Estimated Monthly Payment is an estimate and is subject to change.</p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
