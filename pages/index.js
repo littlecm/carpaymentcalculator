@@ -131,8 +131,8 @@ export default function Home() {
               className="block text-sm font-medium text-gray-700 mb-2"
             >
               Down Payment
-           </label>
-          <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
+            </label>
+            <div className="flex flex-wrap gap-2 md:gap-4 mb-2">
               {potentialPayments.map(({ downPayment: dp, paymentDifference }) => (
                 <button
                   key={dp}
@@ -143,7 +143,7 @@ export default function Home() {
                 >
                   {formatCurrency(dp)}
                   {downPayment !== dp && (
-                    <span className="block text-xs text-red-600">
+                    <span className={`block text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -151,10 +151,10 @@ export default function Home() {
               ))}
             </div>
             <input
-              type="number"
+              type="text"
               id="downPayment"
-              value={downPayment}
-              onChange={(e) => setDownPayment(parseFloat(e.target.value))}
+              value={formatCurrency(downPayment)}
+              onChange={(e) => setDownPayment(parseFloat(e.target.value.replace(/[$,]/g, "")))}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -195,7 +195,7 @@ export default function Home() {
                 >
                   {term} mo
                   {financeTerm !== term && (
-                    <span className="block text-xs text-red-600">
+                    <span className={`block text-xs ${paymentDifference > 0 ? "text-red-600" : "text-green-600"}`}>
                       {paymentDifference > 0 ? "↑" : "↓"} {formatCurrency(Math.abs(paymentDifference))}
                     </span>
                   )}
@@ -267,10 +267,10 @@ export default function Home() {
             </div>
           </div>
           <div className="text-xs text-gray-600 mt-4 text-center md:text-left">
-            <p>
+            <p className="text-[10px]">
               *Tax, title, and tags vary by state. All costs and incentives, including taxes and fees, will be finalized at the time of purchase.
             </p>
-            <p>The Estimated Monthly Payment is an estimate and is subject to change.</p>
+            <p className="text-[10px]">The Estimated Monthly Payment is an estimate and is subject to change.</p>
           </div>
         </div>
       </div>
