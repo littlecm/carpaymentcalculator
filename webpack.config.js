@@ -5,7 +5,7 @@ module.exports = {
   entry: './paymentCalculatorEntry.js',
   output: {
     filename: 'paymentCalculator.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'), // Change this to 'public'
     library: 'PaymentCalculator',
     libraryTarget: 'umd',
   },
